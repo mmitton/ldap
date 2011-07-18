@@ -8,7 +8,7 @@ package ldap
 import (
 	"fmt"
    "os"
-   "github.com/mmitton/asn1-ber"
+   "github.com/hsoj/asn1-ber"
 )
 
 const (
