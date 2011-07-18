@@ -30,7 +30,7 @@ type Conn struct {
 // Dial connects to the given address on the given network using net.Dial
 // and then returns a new Conn for the connection.
 func Dial(network, addr string) (*Conn, *Error) {
-	c, err := net.Dial(network, "", addr)
+	c, err := net.Dial(network, addr)
 	if err != nil {
 		return nil, NewError( ErrorNetwork, err )
 	}
@@ -42,7 +42,7 @@ func Dial(network, addr string) (*Conn, *Error) {
 // Dial connects to the given address on the given network using net.Dial
 // and then sets up SSL connection and returns a new Conn for the connection.
 func DialSSL(network, addr string) (*Conn, *Error) {
-	c, err := tls.Dial(network, "", addr, nil)
+	c, err := tls.Dial(network, addr, nil)
 	if err != nil {
 		return nil, NewError( ErrorNetwork, err )
 	}
@@ -56,7 +56,7 @@ func DialSSL(network, addr string) (*Conn, *Error) {
 // Dial connects to the given address on the given network using net.Dial
 // and then starts a TLS session and returns a new Conn for the connection.
 func DialTLS(network, addr string) (*Conn, *Error) {
-	c, err := net.Dial(network, "", addr)
+	c, err := net.Dial(network, addr)
 	if err != nil {
 		return nil, NewError( ErrorNetwork, err )
 	}
