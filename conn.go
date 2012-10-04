@@ -239,8 +239,10 @@ func (l *Conn) processMessages() {
 					fmt.Printf("Unexpected Message Result: %d\n", message_id)
 					ber.PrintPacket(message_packet.Packet)
 				} else {
-					go func() { chanResult <- message_packet.Packet }()
-					// chanResult <- message_packet.Packet
+					packetCopy := message_packet.Packet
+					go func() {
+						chanResult <- packetCopy
+					}()
 				}
 			case MessageFinish:
 				// Remove from message list
