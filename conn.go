@@ -24,7 +24,7 @@ type Conn struct {
 	chanProcessMessage chan *messagePacket
 	chanMessageID      chan uint64
 
-	closeLock sync.Mutex
+	closeLock sync.RWMutex
 }
 
 // Dial connects to the given address on the given network using net.Dial
@@ -256,6 +256,9 @@ func (l *Conn) processMessages() {
 }
 
 func (l *Conn) closeAllChannels() {
+	l.closeLock.Lock()
+	defer l.closeLock.Unlock()
+
 	fmt.Printf("closeAllChannels\n")
 	for MessageID, Channel := range l.chanResults {
 		if l.Debug {
@@ -291,8 +294,9 @@ func (l *Conn) reader() {
 
 		message_id := p.Children[0].Value.(uint64)
 		message_packet := &messagePacket{Op: MessageResponse, MessageID: message_id, Packet: p}
+
 		if l.chanProcessMessage != nil {
-			l.chanProcessMessage <- message_packet
+			l.sendProcessMessage(message_packet)
 		} else {
 			fmt.Printf("ldap.reader: Cannot return message\n")
 			return
@@ -301,7 +305,12 @@ func (l *Conn) reader() {
 }
 
 func (l *Conn) sendProcessMessage(message *messagePacket) {
-	if l.chanProcessMessage != nil {
-		go func() { l.chanProcessMessage <- message }()
-	}
+	go func() {
+		l.closeLock.RLock()
+		defer l.closeLock.RUnlock()
+
+		if l.chanProcessMessage != nil {
+			l.chanProcessMessage <- message
+		}
+	}()
 }
