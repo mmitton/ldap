@@ -7,7 +7,7 @@ package ldap
 
 import (
    "github.com/mmitton/asn1-ber"
-   "os"
+   "errors"
 )
 
 func (l *Conn) Bind( username, password string ) *Error {
@@ -30,25 +30,25 @@ func (l *Conn) Bind( username, password string ) *Error {
       return err
    }
    if channel == nil {
-      return NewError( ErrorNetwork, os.NewError( "Could not send message" ) )
+      return NewError( ErrorNetwork, errors.New( "Could not send message" ) )
    }
    defer l.finishMessage( messageID )
    packet = <-channel
 
    if packet == nil {
-      return NewError( ErrorNetwork, os.NewError( "Could not retrieve response" ) )
+      return NewError( ErrorNetwork, errors.New( "Could not retrieve response" ) )
    }
 
    if l.Debug {
       if err := addLDAPDescriptions( packet ); err != nil {
-         return NewError( ErrorDebugging, err )
+         return NewError( ErrorDebugging, err.Err )
       }
       ber.PrintPacket( packet )
    }
 
    result_code, result_description := getLDAPResultCode( packet )
    if result_code != 0 {
-      return NewError( result_code, os.NewError( result_description ) )
+      return NewError( result_code, errors.New( result_description ) )
    }
 
    return nil
