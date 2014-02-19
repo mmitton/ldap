@@ -9,7 +9,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"github.com/mmitton/asn1-ber"
+	"github.com/baris/asn1-ber"
 	"net"
 	"sync"
 )
