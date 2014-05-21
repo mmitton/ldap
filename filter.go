@@ -6,8 +6,8 @@
 package ldap
 
 import (
+   "errors"
 	"fmt"
-   "os"
    "github.com/mmitton/asn1-ber"
 )
 
@@ -51,14 +51,14 @@ var FilterSubstringsMap = map[ uint64 ] string {
 
 func CompileFilter( filter string ) ( *ber.Packet, *Error ) {
    if len( filter ) == 0 || filter[ 0 ] != '(' {
-      return nil, NewError( ErrorFilterCompile, os.NewError( "Filter does not start with an '('" ) )
+      return nil, NewError( ErrorFilterCompile, errors.New( "Filter does not start with an '('" ) )
    }
    packet, pos, err := compileFilter( filter, 1 )
    if err != nil {
       return nil, err
    }
    if pos != len( filter ) {
-      return nil, NewError( ErrorFilterCompile, os.NewError( "Finished compiling filter with extra at end.\n" + fmt.Sprint( filter[pos:] ) ) )
+      return nil, NewError( ErrorFilterCompile, errors.New( "Finished compiling filter with extra at end.\n" + fmt.Sprint( filter[pos:] ) ) )
    }
    return packet, nil
 }
@@ -66,7 +66,7 @@ func CompileFilter( filter string ) ( *ber.Packet, *Error ) {
 func DecompileFilter( packet *ber.Packet ) (ret string, err *Error) {
    defer func() {
       if r := recover(); r != nil {
-         err = NewError( ErrorFilterDecompile, os.NewError( "Error decompiling filter" ) )
+         err = NewError( ErrorFilterDecompile, errors.New( "Error decompiling filter" ) )
       }
    }()
    ret = "("
@@ -146,7 +146,7 @@ func compileFilterSet( filter string, pos int, parent *ber.Packet ) ( int, *Erro
       parent.AppendChild( child )
    }
    if pos == len( filter ) {
-      return pos, NewError( ErrorFilterCompile, os.NewError( "Unexpected end of filter" ) )
+      return pos, NewError( ErrorFilterCompile, errors.New( "Unexpected end of filter" ) )
    }
 
    return pos + 1, nil
@@ -155,7 +155,7 @@ func compileFilterSet( filter string, pos int, parent *ber.Packet ) ( int, *Erro
 func compileFilter( filter string, pos int ) ( p *ber.Packet, new_pos int, err *Error ) {
    defer func() {
       if r := recover(); r != nil {
-         err = NewError( ErrorFilterCompile, os.NewError( "Error compiling filter" ) )
+         err = NewError( ErrorFilterCompile, errors.New( "Error compiling filter" ) )
       }
    }()
    p = nil
@@ -205,11 +205,11 @@ func compileFilter( filter string, pos int ) ( p *ber.Packet, new_pos int, err *
             new_pos++
          }
          if new_pos == len( filter ) {
-            err = NewError( ErrorFilterCompile, os.NewError( "Unexpected end of filter" ) )
+            err = NewError( ErrorFilterCompile, errors.New( "Unexpected end of filter" ) )
             return
          }
          if p == nil {
-            err = NewError( ErrorFilterCompile, os.NewError( "Error parsing filter" ) )
+            err = NewError( ErrorFilterCompile, errors.New( "Error parsing filter" ) )
             return
          }
          p.AppendChild( ber.NewString( ber.ClassUniversal, ber.TypePrimative, ber.TagOctetString, attribute, "Attribute" ) )
@@ -244,6 +244,6 @@ func compileFilter( filter string, pos int ) ( p *ber.Packet, new_pos int, err *
          new_pos++
          return
    }
-   err = NewError( ErrorFilterCompile, os.NewError( "Reached end of filter without closing parens" ) )
+   err = NewError( ErrorFilterCompile, errors.New( "Reached end of filter without closing parens" ) )
    return
 }
