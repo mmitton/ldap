@@ -6,10 +6,10 @@
 package ldap
 
 import (
+   "errors"
    "github.com/mmitton/asn1-ber"
    "fmt"
    "io/ioutil"
-   "os"
 )
 
 // LDAP Application Codes
@@ -153,7 +153,7 @@ var LDAPResultCodeMap = map[uint8] string {
 func addLDAPDescriptions( packet *ber.Packet ) (err *Error) {
    defer func() {
       if r := recover(); r != nil {
-         err = NewError( ErrorDebugging, os.NewError( "Cannot process packet to add descriptions" ) )
+         err = NewError( ErrorDebugging, errors.New( "Cannot process packet to add descriptions" ) )
       }
    }()
    packet.Description = "LDAP Response"
@@ -278,15 +278,15 @@ func DebugBinaryFile( FileName string ) *Error {
 }
 
 type Error struct {
-   Err os.Error
+   Err error
    ResultCode uint8
 }
 
-func (e *Error) String() string {
-   return fmt.Sprintf( "LDAP Result Code %d %q: %s", e.ResultCode, LDAPResultCodeMap[ e.ResultCode ], e.Err.String() )
+func (e *Error) Error() string {
+   return fmt.Sprintf( "LDAP Result Code %d %q: %s", e.ResultCode, LDAPResultCodeMap[ e.ResultCode ], e.Err )
 }
 
-func NewError( ResultCode uint8, Err os.Error ) (* Error) {
+func NewError( ResultCode uint8, Err error ) (* Error) {
    return &Error{ ResultCode: ResultCode, Err: Err }
 }
 
