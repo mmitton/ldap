@@ -255,7 +255,9 @@ fmt.Printf( "closeAllChannels\n" )
       if l.Debug {
          fmt.Printf( "Closing channel for MessageID %d\n", MessageID );
       }
-      close( Channel )
+      if Channel != nil {
+         close( Channel )
+      }
       l.chanResults[ MessageID ] = nil
    }
    close( l.chanMessageID )
