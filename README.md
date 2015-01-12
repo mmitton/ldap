@@ -11,7 +11,7 @@ Working:
 - Searching for entries
 - Compiling string filters to LDAP filters
 - Paging Search Results
-- Mulitple internal goroutines to handle network traffic
+- Multiple internal goroutines to handle network traffic
   - Makes library goroutine safe
   - Can perform multiple search requests at the same time and return
     the results to the proper goroutine.  All requests are blocking
