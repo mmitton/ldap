@@ -1,4 +1,4 @@
-# Basic LDAP v3 functionality for the Go (Golang) programming language
+Basic LDAP v3 functionality for the Go (Golang) programming language
 
 # Required Libraries:
 
