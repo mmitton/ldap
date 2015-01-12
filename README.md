@@ -1,10 +1,10 @@
-Basic LDAP v3 functionality for the Go (Golang) programming language
+# Basic LDAP v3 functionality for the Go (Golang) programming language
 
-Required Libraries:
+# Required Libraries:
 
 - [github.com/mmitton/asn1-ber](https://github.com/mmitton/asn1-ber)
 
-Working:
+# Working:
 
 - Connecting to LDAP server
 - Binding to LDAP server
@@ -17,11 +17,11 @@ Working:
     the results to the proper goroutine.  All requests are blocking
     requests, so the goroutine does not need special handling.
 
-Tests Implemented:
+# Tests Implemented:
 
 - Filter Compile / Decompile
 
-TODO:
+# TODO:
 
 -  Modify Requests / Responses
 -  Add Requests / Responses
