@@ -20,7 +20,7 @@ func TestConnect(t *testing.T) {
 	fmt.Printf("TestConnect: starting...\n")
 	l, err := Dial("tcp", fmt.Sprintf("%s:%d", ldap_server, ldap_port))
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 	defer l.Close()
@@ -31,7 +31,7 @@ func TestSearch(t *testing.T) {
 	fmt.Printf("TestSearch: starting...\n")
 	l, err := Dial("tcp", fmt.Sprintf("%s:%d", ldap_server, ldap_port))
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 	defer l.Close()
@@ -45,7 +45,7 @@ func TestSearch(t *testing.T) {
 
 	sr, err := l.Search(search_request)
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 
@@ -56,14 +56,14 @@ func TestSearchWithPaging(t *testing.T) {
 	fmt.Printf("TestSearchWithPaging: starting...\n")
 	l, err := Dial("tcp", fmt.Sprintf("%s:%d", ldap_server, ldap_port))
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 	defer l.Close()
 
 	err = l.Bind("", "")
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 
@@ -75,7 +75,7 @@ func TestSearchWithPaging(t *testing.T) {
 		nil)
 	sr, err := l.SearchWithPaging(search_request, 5)
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 
@@ -92,7 +92,7 @@ func testMultiGoroutineSearch(t *testing.T, l *Conn, results chan *SearchResult,
 	sr, err := l.Search(search_request)
 
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		results <- nil
 		return
 	}
@@ -104,7 +104,7 @@ func TestMultiGoroutineSearch(t *testing.T) {
 	fmt.Printf("TestMultiGoroutineSearch: starting...\n")
 	l, err := Dial("tcp", fmt.Sprintf("%s:%d", ldap_server, ldap_port))
 	if err != nil {
-		t.Errorf(err.String())
+		t.Error(err)
 		return
 	}
 	defer l.Close()
