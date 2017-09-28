@@ -1,4 +1,4 @@
-.PHONY: default install build test quicktest fmt vet lint 
+.PHONY: default install build test quicktest fmt vet lint
 
 GO_VERSION := $(shell go version | cut -d' ' -f3 | cut -d. -f2)
 
@@ -28,11 +28,11 @@ quicktest:
 fmt:
 	@echo gofmt -l .
 	@OUTPUT=`gofmt -l . 2>&1`; \
-	if [ "$$OUTPUT" ]; then \
+		if [ "$$OUTPUT" ]; then \
 		echo "gofmt must be run on the following files:"; \
 		echo "$$OUTPUT"; \
 		exit 1; \
-	fi
+		fi
 
 # Only run on go1.5+
 vet:
@@ -45,8 +45,8 @@ vet:
 lint:
 	@echo golint ./...
 	@OUTPUT=`golint ./... 2>&1`; \
-	if [ "$$OUTPUT" ]; then \
+		if [ "$$OUTPUT" ]; then \
 		echo "golint errors:"; \
 		echo "$$OUTPUT"; \
 		exit 1; \
-	fi
+		fi
