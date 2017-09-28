@@ -255,7 +255,9 @@ func (l *Conn) closeAllChannels() {
 		if l.Debug {
 			fmt.Printf("Closing channel for MessageID %d\n", MessageID)
 		}
-		close(Channel)
+		if Channel != nil {
+			close(Channel)
+		}
 		l.chanResults[MessageID] = nil
 	}
 	close(l.chanMessageID)
@@ -296,6 +298,6 @@ func (l *Conn) reader() {
 
 func (l *Conn) sendProcessMessage(message *messagePacket) {
 	if l.chanProcessMessage != nil {
-		go func() { l.chanProcessMessage <- message }()
+		l.chanProcessMessage <- message
 	}
 }
