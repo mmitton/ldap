@@ -279,7 +279,7 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("LDAP Result Code %d %q: %s", e.ResultCode, LDAPResultCodeMap[e.ResultCode], e.Err)
+	return fmt.Sprintf("LDAP Result Code %d %q: %s\n", e.ResultCode, LDAPResultCodeMap[e.ResultCode], e.Err)
 }
 
 func NewError(ResultCode uint8, Err error) *Error {
